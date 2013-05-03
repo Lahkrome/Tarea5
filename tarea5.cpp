@@ -66,6 +66,13 @@ int main(int argc, char *argv[])
          inner join cursos on cursos.curso_id = asignaturas_cursadas.curso_id
          group by asignatura
          */
+         
+         /*SELECT avg(nota), estudiante_id
+           FROM asignaturas_cursadas 
+           INNER JOIN cursos ON cursos.curso_id=asignaturas_cursadas.curso_id 
+           where not asignatura='CÁLCULO VECTORIAL'
+           Group by estudiante_id 
+           */
     }
     
     if(strcmp(argv[1], "-v")==0)
