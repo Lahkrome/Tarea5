@@ -34,6 +34,8 @@ int main(int argc, char *argv[])
 						result =PQexec(cnn,"select asignatura, avg(nota), STDDEV(nota) from asignaturas_cursadas inner join cursos on cursos.curso_id = asignaturas_cursadas.curso_id group by asignatura");
 						int tuplas = PQntuples(result);
 						int campos = PQnfields(result);
+						cout <<"Formato: "<<endl;
+						cout <<"Ramo | Promedio |  Desviacion Estandar"<<endl;
 						for (i=0; i<tuplas; i++) 
 						{
 							for (int j=0; j<campos; j++) 
