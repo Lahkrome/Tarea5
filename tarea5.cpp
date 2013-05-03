@@ -89,5 +89,14 @@ int main(int argc, char *argv[])
            INNER JOIN cursos ON cursos.curso_id=asignaturas_cursadas.curso_id 
            where not asignatura='CÁLCULO VECTORIAL'
            Group by estudiante_id 
+         
+         SELECT avg(nota), estudiante_id
+FROM asignaturas_cursadas 
+INNER JOIN cursos ON cursos.curso_id=asignaturas_cursadas.curso_id 
+where asignatura='CÁLCULO VECTORIAL'
+Group by estudiante_id
            */
+
+
+
 }
