@@ -2,14 +2,62 @@
 #include <iostream>
 #include <string.h>
 #include <time.h>
-#define SIZE 256
+#include <stdio.h>
+#include <libpq-fe.h>
 
 using namespace std;
 
 int main(int argc, char *argv[])
 {
+	PGconn *cnn = NULL;
+	PGresult *result = NULL;
+	PGresult *prom = NULL;
+	char *host = "sebastian.cl";
+	char *port = "5432";
+	char *dataBase = "iswdb";
+	char *user = "isw";
+	char *passwd = "isw";
+
+	 int i;
+     cnn = PQsetdbLogin(host,port,NULL,NULL,dataBase,user,passwd);
+	
     if(strcmp(argv[1], "-s")==0)
     { 
+		
+		if (PQstatus(cnn) != CONNECTION_BAD)
+			{
+				cout << "Conectado a PostgreSQL!" << endl;
+				result = PQexec(cnn, "SELECT * FROM cursos");
+
+					if (result != NULL)
+					{
+						result =PQexec(cnn,"select asignatura, avg(nota), STDDEV(nota) from asignaturas_cursadas inner join cursos on cursos.curso_id = asignaturas_cursadas.curso_id group by asignatura");
+						int tuplas = PQntuples(result);
+						int campos = PQnfields(result);
+						for (i=0; i<tuplas; i++) 
+						{
+							for (int j=0; j<campos; j++) 
+							{
+								//cout <<"Ramo : ";
+								//cout <<"Promedio : ";
+								//cout <<"Desviacion Estandar : ";
+								cout << PQgetvalue(result,i,j) << " | ";
+							}
+						cout << endl;
+						}
+
+					// liberar la memoria
+					PQclear(result);
+					}
+			}
+
+		else 
+		{
+			cout << "Error de conexion" << endl;
+			return 0;
+        }
+
+    PQfinish(cnn);
          /*
          select asignatura, avg(nota), STDDEV(nota) 
          from asignaturas_cursadas
@@ -20,18 +68,11 @@ int main(int argc, char *argv[])
     
     if(strcmp(argv[1], "-v")==0)
     {
-        char buffer[SIZE];
-       time_t curtime;
-       struct tm *loctime;
-     
-       /* Get the current time. */
-       curtime = time (NULL);
-     
-       /* Convert it to local time representation. */
-       loctime = localtime (&curtime);
-       cout <<"Hora del sistema: "<<endl<<endl;
-       /* Print out the date and time in the standard format. */
-       fputs (asctime (loctime), stdout);
+		time_t rawtime;
+
+        time (&rawtime);
+	    cout <<"Fecha del sistema: "<<endl<<endl;
+       printf ("La hora y fecha actual del sistema es: %s", ctime (&rawtime));
        cout<<endl;
        cout<<"Version del software: "<<endl<<"Beta 1.5"<<endl<<endl;
        cout <<"Integrantes: "<<endl;       
@@ -40,9 +81,5 @@ int main(int argc, char *argv[])
        cout <<"Abraham Munoz Saez"<<endl;           
     }
     
-   
-    
-    
-    system("PAUSE");
     return EXIT_SUCCESS;
 }
